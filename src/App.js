@@ -14,7 +14,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/cloud_resume/info" element={<Info />} />
-          <Route path="/" element={<Info />} />
+          <Route path="/cloud_resume/" element={<Info />} />
           {/* <Route path="/projects" element={<Projects />} /> */}
           <Route path="/cloud_resume/experience" element={<Experience />} />
         </Routes>
