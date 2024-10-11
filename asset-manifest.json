@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/cloud-resume/static/css/main.b1bd5028.css",
-    "main.js": "/cloud-resume/static/js/main.27da472b.js",
+    "main.js": "/cloud-resume/static/js/main.4a38c8fb.js",
     "static/js/453.db64f028.chunk.js": "/cloud-resume/static/js/453.db64f028.chunk.js",
     "static/media/sf.jpeg": "/cloud-resume/static/media/sf.59ca95f8923fa3bceb50.jpeg",
     "static/media/Bryant_Bettencourt_Resume.pdf": "/cloud-resume/static/media/Bryant_Bettencourt_Resume.05ac569bf34f8652a1e4.pdf",
@@ -11,11 +11,11 @@
     "static/media/logo.svg": "/cloud-resume/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
     "index.html": "/cloud-resume/index.html",
     "main.b1bd5028.css.map": "/cloud-resume/static/css/main.b1bd5028.css.map",
-    "main.27da472b.js.map": "/cloud-resume/static/js/main.27da472b.js.map",
+    "main.4a38c8fb.js.map": "/cloud-resume/static/js/main.4a38c8fb.js.map",
     "453.db64f028.chunk.js.map": "/cloud-resume/static/js/453.db64f028.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.b1bd5028.css",
-    "static/js/main.27da472b.js"
+    "static/js/main.4a38c8fb.js"
   ]
 }
