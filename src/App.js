@@ -13,10 +13,10 @@ function App() {
       <Header />
       <BrowserRouter>
         <Routes>
-          <Route path="/info" element={<Info />} />
+          <Route path="/cloud_resume/info" element={<Info />} />
           <Route path="/" element={<Info />} />
           {/* <Route path="/projects" element={<Projects />} /> */}
-          <Route path="/experience" element={<Experience />} />
+          <Route path="/cloud_resume/experience" element={<Experience />} />
         </Routes>
       </BrowserRouter>
       {/* <Footer /> */}
