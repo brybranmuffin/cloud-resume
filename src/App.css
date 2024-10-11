@@ -36,3 +36,252 @@
     transform: rotate(360deg);
   }
 }
+
+.header--Title{
+  color: red
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: flex-end;
+  height: 60px;
+  background-color: black;
+  align-items: center;
+  padding-right: 10px;
+}
+
+.header--pages{
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+}
+
+.footer{
+  min-height: 2.5rem;
+  background-color: rgb(197, 21, 21);
+  display: flex;
+  flex-direction: column;
+}
+
+.footer--containers{
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+}
+
+a {
+  overflow: hidden;
+  position: relative;
+  display: inline-block;
+}
+
+a::before,
+a::after {
+ content: '';
+  position: absolute;
+  width: 100%;
+  left: 0;
+}
+a::before {
+  background-color: #ffffff;
+  height: 2px;
+  bottom: 0;
+  transform-origin: 100% 50%;
+  transform: scaleX(0);
+  transition: transform .3s cubic-bezier(0.76, 0, 0.24, 1);
+}
+a::after {
+  content: attr(data-replace);
+  height: 100%;
+  top: 0;
+  transform-origin: 100% 50%;
+  transform: translate3d(200%, 0, 0);
+  transition: transform .3s cubic-bezier(0.76, 0, 0.24, 1);
+  color: #54b3d6;
+}
+
+a:hover::before {
+  transform-origin: 0% 50%;
+  transform: scaleX(1);
+}
+a:hover::after {
+  transform: translate3d(0, 0, 0);
+}
+
+a span {
+  display: inline-block;
+  transition: transform .3s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+a:hover span {
+  transform: translate3d(-200%, 0, 0);
+}
+
+/* Presentational Styles */
+/* body {
+	display: grid;
+  font-family: 'Poppins', sans-serif;
+  font-size: 27px;
+	line-height: 1.5;
+  height: 100vh;
+	place-items: center;
+} */
+
+a {
+	text-decoration: none;
+	color: #ffffff;
+	font-weight: 700;
+	vertical-align: top;
+}
+
+.projects--header{
+  flex-grow: 1;
+  background-color: #61dafb;
+}
+
+.experience--header--text{
+  color: black;
+  margin: 0;
+  padding: 0;
+  padding-left: 10px;
+  text-align: left;
+}
+.experience--header--line{
+  background-color: gray;
+  color:gray;
+  height: 4px;
+  border: 0;
+  max-width: 95%;
+  margin-left: 10px;
+}
+
+.experience--top--pic{
+  border-radius: 50%;
+  border: 5px solid gray;
+  width: 150px;
+  margin: 0;
+  
+ 
+
+}
+
+.experience--top--text{
+  padding-left: 20px;
+  text-align: left;
+}
+
+.experience--top--header{
+  padding: 0;
+  margin: 0;
+}
+
+.experience--top--subscript{
+  padding: 0;
+  margin: 0;
+  padding-top: 10px;
+}
+
+.experience--top{
+ display: flex;
+ align-items: center;
+ padding: 10px 20px;
+ margin: 0;
+ height: 170px;
+}
+
+/* .experience--header--container{
+  display: flex;
+  justify-content: flex-start;
+} */
+
+/* <div className='experience--element'>
+<h2 className='experience--element--title'>Software Engineer</h2>
+<h3 className='experience--element--subtitle'>Intel | San Jose, Ca | Oct 2021 - June 2024</h3>
+<ul className='experience--element--info'>
+    <li className='experience--element--info--text'></li> */
+
+.experience--element{
+  display: flex;
+  margin: 0;
+  padding-left: 20px;
+  flex-direction: column;
+  margin-right: auto;
+}
+.experience--element--title{
+  padding: 0;
+  margin: 0;
+  margin-right: auto;
+}
+.experience--element--subtitle{
+  padding: 0;
+  margin: 0;
+  margin-right: auto;
+}
+.experience--element--info{
+  margin-right: auto;
+  margin-bottom: 15px;
+}
+.experience--element--info--text{
+  text-align: left;
+}
+
+.normal--link{
+  color: rgb(11, 78, 203);
+}
+
+
+.info{
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+.info--words{
+  padding: 10%;
+}
+.info--title{
+text-align: left;
+font-size: 3em;
+margin: 0;
+padding: 0;
+}
+
+.info--text{
+text-align: left;
+font-size:1em;
+}
+.info--left{
+  height: 100vh;
+  width: 50vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.info--right{
+ 
+  width: 50vw;
+}
+.info--background{
+  width: 50vw;
+  height: 100vh;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+.link--icon{
+  height: 30px;
+}
+
+.info--icon--container{
+  display: flex;
+  width: 20vw;
+  justify-content: space-evenly;
+}
