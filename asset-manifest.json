@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/static/css/main.b1bd5028.css",
+    "main.js": "/static/js/main.8f762490.js",
+    "static/js/453.db64f028.chunk.js": "/static/js/453.db64f028.chunk.js",
+    "static/media/sf.jpeg": "/static/media/sf.59ca95f8923fa3bceb50.jpeg",
+    "static/media/Bryant_Bettencourt_Resume.pdf": "/static/media/Bryant_Bettencourt_Resume.05ac569bf34f8652a1e4.pdf",
+    "static/media/bryant.png": "/static/media/bryant.ceff5d5bd59bbc45f12a.png",
+    "static/media/wellfound.png": "/static/media/wellfound.fec0ad16a8e3db61b629.png",
+    "static/media/linkedIn.png": "/static/media/linkedIn.68ac41e1459436bfd38f.png",
+    "static/media/logo.svg": "/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "index.html": "/index.html",
+    "main.b1bd5028.css.map": "/static/css/main.b1bd5028.css.map",
+    "main.8f762490.js.map": "/static/js/main.8f762490.js.map",
+    "453.db64f028.chunk.js.map": "/static/js/453.db64f028.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b1bd5028.css",
+    "static/js/main.8f762490.js"
+  ]
+}
