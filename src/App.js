@@ -1,5 +1,5 @@
 import logo from './logo.svg';
-import { HashRouter, Route, Routes, Link } from "react-router-dom";
+import { HashRouter, Route, Routes } from "react-router-dom";
 
 import './App.css';
 import Header from "./components/Header"
@@ -10,19 +10,19 @@ import Experience from "./components/Experience"
 
 function App() {
   return (
+    <HashRouter>
     <div className="App">
       <Header />
-      <HashRouter>
         <Routes>
           <Route path="/info" element={<Info />} />
           <Route path="/" element={<Info />} />
           {/* <Route path="/projects" element={<Projects />} /> */}
           <Route path="/experience" element={<Experience />} />
         </Routes>
-      </HashRouter>
       {/* <Footer /> */}
 
     </div>
+    </HashRouter>
   );
 }
 
