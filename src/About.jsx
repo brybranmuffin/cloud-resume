@@ -15,10 +15,11 @@ export default function About() {
           Hi I&rsquo;m<span className="last">Bryant</span>
         </h1>
         <p className="tagline">
-          I&rsquo;m an AI researcher in Chicago working on model understanding
-          and harness engineering. I studied AI at Northwestern and data science
-          at Berkeley, and built FPGA tooling at Intel before that. I care about
-          making how these systems work legible to the people learning them.
+          I&rsquo;m an AI Research Scientist/Engineer Intern at Adobe, working on
+          document processing and form-filling workflows, with a broader interest
+          in model understanding and harness engineering. I studied AI at
+          Northwestern and data science at Berkeley, and built FPGA tooling at
+          Intel before that.
         </p>
 
         <ul className="social" aria-label="Elsewhere">
