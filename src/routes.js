@@ -2,7 +2,8 @@
 export const ROUTES = [
   { slug: 'about', label: 'About Me' },
   { slug: 'projects', label: 'Projects' },
-  { slug: 'resume', label: 'Resume' },
+  // Resume tab removed for now; restore by adding
+  // { slug: 'resume', label: 'Resume' } here plus a Resume view in App.jsx.
 ]
 
 export const SLUGS = ROUTES.map((r) => r.slug)

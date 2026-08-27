@@ -4,13 +4,12 @@ import Nav from './Nav'
 import About from './About'
 import Projects from './Projects'
 import ProjectPage from './ProjectPage'
-import Resume from './Resume'
 import { useTimeOfDayTheme } from './useTimeOfDayTheme'
 import { useHashPath } from './useHashRoute'
 import { SLUGS, HOME, ROUTES } from './routes'
 import { bySlug } from './projectData'
 
-const VIEWS = { about: About, projects: Projects, resume: Resume }
+const VIEWS = { about: About, projects: Projects }
 
 export default function App() {
   useTimeOfDayTheme()
