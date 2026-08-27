@@ -31,7 +31,7 @@ Renaming one requires renaming the other.
 
 Static hosting has no server-side rewrites, so deep links to client-side routes 404 on
 refresh. The previous version of this site used `HashRouter` for that reason. If routing
-is reintroduced, use `HashRouter` — or configure an S3/CloudFront error-document rewrite
+is reintroduced, use `HashRouter`, or configure an S3/CloudFront error-document rewrite
 to `index.html` before using `BrowserRouter`.
 
 ### Other

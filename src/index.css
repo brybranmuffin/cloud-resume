@@ -1,22 +1,344 @@
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+/* Theme variables are driven by the time of day (see useTimeOfDayTheme).
+   Values here are just the first paint before JavaScript runs. */
+:root{
+  --bg:#d3e4f3; --ink:#16181c; --muted:#3d4450; --eyebrow:#556070; --marker:#ecc94b;
+  --stars:0;
+  --name-shadow:0 6px 14px rgba(12,14,22,.28);
+  --photo-shadow:0 14px 40px rgba(12,14,22,.28);
 }
 
-html {
-  -webkit-text-size-adjust: 100%;
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:"Playfair Display", Georgia, serif;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  transition:background-color 6s linear, color 6s linear;
 }
 
-body {
-  margin: 0;
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  line-height: 1.5;
+/* React mounts here. The nav sits at the top and .view takes the remaining
+   height, so the page content stays vertically centred in whatever is left. */
+#root{min-height:100vh;width:100%;display:flex;flex-direction:column}
+
+/* ---- Tabs ---- */
+.tabs{position:relative;z-index:1;width:100%}
+.tabs ul{
+  list-style:none;display:flex;flex-wrap:wrap;
+  gap:clamp(18px,2.6vw,40px);
+  width:100%;max-width:1200px;margin:0 auto;
+  /* horizontal padding matches .page so the tabs line up with the content */
+  padding:clamp(22px,3vw,38px) clamp(32px,6vw,80px) 0;
+}
+.tab{
+  position:relative;display:inline-block;
+  font-family:"Space Mono", ui-monospace, monospace;
+  font-weight:700;font-size:clamp(11px,1.05vw,14px);
+  letter-spacing:.2em;text-transform:uppercase;text-decoration:none;
+  color:var(--eyebrow);
+  padding-bottom:7px;
+  /* Short, not the 6s used elsewhere: this colour also encodes which tab is
+     selected, and a 6s crossfade made clicking feel broken. The time-of-day
+     drift is imperceptible at any duration; the palette moves ~0.1 of an RGB
+     step between the theme's 5s ticks. */
+  transition:color .3s ease;
+}
+/* Underline is a separate layer so selection feedback is instant regardless of
+   how the colour is transitioning. */
+.tab::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:2px;
+  background:currentColor;opacity:0;transform:scaleX(.4);transform-origin:left;
+  transition:opacity .18s ease,transform .18s ease;
+}
+.tab:hover{color:var(--ink)}
+.tab:hover::after{opacity:.35;transform:scaleX(1)}
+.tab:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-radius:2px}
+.tab[aria-current="page"]{color:var(--ink)}
+.tab[aria-current="page"]::after{opacity:1;transform:scaleX(1)}
+
+.view{flex:1;display:flex;align-items:center;width:100%}
+.page--empty{min-height:50vh}
+
+/* ---- Projects grid ---- */
+.projects{
+  width:100%;max-width:1200px;margin:0 auto;
+  padding:clamp(20px,3vw,44px) clamp(32px,6vw,80px) clamp(44px,6vw,88px);
+}
+.projects__grid{display:grid;gap:clamp(16px,2vw,28px);grid-template-columns:1fr}
+@media (min-width:760px){
+  .projects__grid{grid-template-columns:repeat(2,1fr)}
+  /* A single project shouldn't occupy half the page with a gap beside it. */
+  .projects__grid:has(> :only-child){
+    grid-template-columns:minmax(0,1fr);max-width:900px;margin-inline:auto;
+  }
 }
 
-img,
-svg,
-video {
-  display: block;
-  max-width: 100%;
+.card{
+  position:relative;display:block;overflow:hidden;isolation:isolate;
+  /* Type below is sized in cqw against the card, not the viewport, so it stays
+     proportional whether the card is 820px wide or 320px. */
+  container-type:inline-size;
+  aspect-ratio:3/2;border-radius:16px;text-decoration:none;
+  background:color-mix(in srgb, var(--ink) 10%, var(--bg));
+  box-shadow:var(--photo-shadow);
+  transition:box-shadow 6s linear, transform .38s cubic-bezier(.16,1,.3,1);
+}
+.card:hover,.card:focus-visible{transform:translateY(-5px)}
+.card:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+
+.card__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  transform:scale(1.001);transition:transform .5s cubic-bezier(.16,1,.3,1)}
+.card:hover .card__img{transform:scale(1.045)}
+
+/* Wide diagrams and image strips: cropping them destroys the content, so show
+   the whole thing and sit it high in the card, clear of the text block.
+   Note: percentage padding resolves against WIDTH on every side, so position
+   is set with object-position rather than padding. */
+.card--contain{background:linear-gradient(158deg,#26304d 0%,#161b2b 60%,#0f1320 100%)}
+.card__img--contain{
+  object-fit:contain;
+  /* Top-anchored band rather than the full card, so a dense diagram doesn't
+     run behind the title. `top`/`height` percentages resolve against height,
+     unlike padding, which resolves against width on every side. */
+  inset:5% 0 auto 0;
+  height:56%;
+}
+.card--contain:hover .card__img{transform:scale(1.02)}
+
+/* Sits at the top so it never collides with the title/description block. */
+.card__fallback{
+  position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;
+  background:linear-gradient(150deg,#4a5560,#232a33);
+  font-family:"Space Mono", monospace;font-size:10px;letter-spacing:.1em;
+  color:rgba(255,255,255,.38);text-align:center;padding:18px 20px;
+}
+
+/* Full-card darkening on hover. The scrim alone can't guarantee legibility for
+   the revealed description, which sits higher up over the brightest part of a
+   photo, so this drops the whole image behind it. */
+.card__dim{
+  position:absolute;inset:0;pointer-events:none;
+  background:rgba(6,8,13,.58);opacity:0;transition:opacity .3s ease;
+}
+.card:hover .card__dim,.card:focus-visible .card__dim{opacity:1}
+
+/* Scrim guarantees the title stays legible over any photo. */
+.card__scrim{
+  position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to top,
+    rgba(8,10,14,.88) 0%, rgba(8,10,14,.62) 34%,
+    rgba(8,10,14,.16) 62%, rgba(8,10,14,0) 100%);
+  transition:opacity .38s ease;
+}
+.card:hover .card__scrim,.card:focus-visible .card__scrim{opacity:1}
+
+.card__body{position:absolute;left:0;right:0;bottom:0;padding:clamp(18px,3.4cqw,34px)}
+.card__meta{
+  font-family:"Space Mono", monospace;font-size:clamp(11px,2.44cqw,22px);font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(255,255,255,.78);margin-bottom:clamp(6px,1.2cqw,12px);
+}
+.card__title{
+  font-size:clamp(26px,8.3cqw,72px);font-weight:700;line-height:1.06;
+  color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.45);
+}
+.card__reveal{
+  display:grid;grid-template-rows:0fr;opacity:0;
+  transition:grid-template-rows .42s cubic-bezier(.16,1,.3,1), opacity .3s ease;
+}
+.card__reveal>div{overflow:hidden}
+.card__desc{
+  font-size:clamp(15px,4.15cqw,36px);line-height:1.45;
+  color:rgba(255,255,255,.92);padding-top:clamp(8px,1.4cqw,16px);max-width:42ch;
+}
+/* Reveal on hover only where hovering exists; keyboard focus gets it too. */
+@media (hover:hover){
+  .card:hover .card__reveal,
+  .card:focus-visible .card__reveal{grid-template-rows:1fr;opacity:1}
+}
+/* Touch devices have no hover state, so the description, and the darkening
+   that keeps it readable, are both always on. */
+@media (hover:none){
+  .card__reveal{grid-template-rows:1fr;opacity:1}
+  .card__dim{opacity:1}
+}
+/* Must come after the .card base rule to win on equal specificity.
+   Narrow cards need vertical room: at 2x type a 3:2 card cannot hold the
+   description, which is permanently visible on touch devices. */
+@media (max-width:759px){
+  .card{aspect-ratio:4/5}
+  .card__title{font-size:clamp(28px,8.6cqw,72px)}
+  .card__desc{font-size:clamp(16px,4.4cqw,36px)}
+}
+
+/* ---- Sky layer (decorative, sits behind the content) ---- */
+.sky{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.star{
+  position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;
+  opacity:calc(var(--stars) * .85);transition:opacity 3s linear;
+  animation:tw var(--d,4s) ease-in-out infinite var(--delay,0s);
+}
+@keyframes tw{0%,100%{filter:opacity(.35)}50%{filter:opacity(1)}}
+
+/* ---- Content ---- */
+.page{
+  position:relative;z-index:1;
+  width:100%;max-width:1200px;margin:0 auto;
+  padding:clamp(32px,6vw,80px);
+  /* minmax(0,…) stops the long name's min-content width from stealing the
+     photo column; plain `fr` has an automatic min-content floor. */
+  display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);
+  gap:clamp(36px,6vw,72px);align-items:center;
+}
+.eyebrow{
+  font-family:"Space Mono", ui-monospace, monospace;
+  font-weight:700;font-size:clamp(12px,1.15vw,15px);
+  letter-spacing:.24em;text-transform:uppercase;
+  color:var(--eyebrow);margin-bottom:clamp(20px,3vw,34px);
+  transition:color 6s linear;
+}
+.name{
+  /* "Hi I'm / Bryant" is far shorter than the old "Bryant Bettencourt", so the
+     type can go back up toward the original display size without overflowing. */
+  font-weight:700;font-size:clamp(52px,9.4vw,132px);
+  line-height:.9;letter-spacing:-.01em;margin-bottom:clamp(24px,3.5vw,40px);
+  text-shadow:var(--name-shadow);
+  transition:text-shadow 6s linear;
+}
+.name .last{display:block;font-weight:500;font-style:italic}
+/* Now a short intro paragraph rather than a one-line tagline, so it steps well
+   down from the display type instead of competing with it. */
+.tagline{
+  font-weight:400;font-size:clamp(16px,1.5vw,21px);
+  line-height:1.6;color:var(--muted);max-width:40ch;
+  transition:color 6s linear;
+}
+
+/* ---- Social links ---- */
+.social{
+  list-style:none;display:flex;flex-wrap:wrap;
+  gap:clamp(16px,2vw,28px);margin-top:clamp(20px,2.6vw,34px);
+}
+.social a{
+  display:inline-flex;align-items:center;gap:9px;text-decoration:none;
+  font-family:"Space Mono", ui-monospace, monospace;
+  font-weight:700;font-size:clamp(11px,1.05vw,14px);
+  letter-spacing:.16em;text-transform:uppercase;
+  color:var(--eyebrow);
+  padding-bottom:5px;border-bottom:2px solid transparent;
+  transition:color .3s ease, border-color .3s ease;
+}
+.social a:hover{color:var(--ink);border-bottom-color:currentColor}
+.social a:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-radius:2px}
+.tagline mark{
+  color:inherit;
+  background:linear-gradient(var(--marker),var(--marker));
+  background-repeat:no-repeat;background-size:100% 62%;background-position:0 88%;
+  padding:0 .05em;-webkit-box-decoration-break:clone;box-decoration-break:clone;
+}
+.photo{
+  position:relative;width:100%;aspect-ratio:4/5;
+  border-radius:20px;overflow:hidden;
+  background:color-mix(in srgb, var(--ink) 6%, var(--bg));
+  box-shadow:var(--photo-shadow);
+  transition:background-color 6s linear, box-shadow 6s linear;
+}
+.photo img{width:100%;height:100%;object-fit:cover;display:block}
+.photo-empty{
+  position:absolute;inset:0;display:flex;
+  flex-direction:column;align-items:center;justify-content:center;gap:14px;
+  color:color-mix(in srgb, var(--ink) 45%, transparent);
+  font-family:"Space Mono", monospace;text-align:center;padding:24px;
+}
+.photo-empty svg{width:44px;height:44px;opacity:.7}
+.photo-empty b{font-weight:700;font-size:13px;letter-spacing:.16em;text-transform:uppercase}
+.photo-empty span{font-size:12px;letter-spacing:.04em;line-height:1.5;opacity:.85}
+
+@media (max-width:820px){
+  .page{grid-template-columns:1fr;gap:40px}
+  .photo{max-width:380px;justify-self:start}
+  .tagline{max-width:22em}
+}
+/* ---- Project detail page ---- */
+.detail{
+  width:100%;max-width:820px;margin:0 auto;
+  padding:clamp(16px,2.4vw,32px) clamp(32px,6vw,80px) clamp(56px,7vw,104px);
+}
+.detail__back{
+  display:inline-block;margin-bottom:clamp(18px,2.4vw,30px);
+  font-family:"Space Mono", monospace;font-weight:700;font-size:12px;
+  letter-spacing:.18em;text-transform:uppercase;text-decoration:none;
+  color:var(--eyebrow);transition:color .3s ease;
+}
+.detail__back:hover{color:var(--ink)}
+.detail__back:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-radius:2px}
+
+.detail__figure{
+  margin:0 0 clamp(24px,3.2vw,40px);border-radius:16px;overflow:hidden;
+  background:color-mix(in srgb, var(--ink) 88%, var(--bg));
+  box-shadow:var(--photo-shadow);transition:box-shadow 6s linear;
+}
+/* Never crop on the detail page; the whole image is the point here. */
+.detail__figure img{display:block;width:100%;max-height:58vh;object-fit:contain}
+.detail__fallback{
+  aspect-ratio:3/2;display:flex;align-items:center;justify-content:center;
+  font-family:"Space Mono", monospace;font-size:12px;color:rgba(255,255,255,.45);
+}
+
+.detail__meta{
+  font-family:"Space Mono", monospace;font-weight:700;font-size:clamp(11px,1.05vw,14px);
+  letter-spacing:.2em;text-transform:uppercase;color:var(--eyebrow);
+  margin-bottom:10px;transition:color 6s linear;
+}
+.detail__title{
+  font-size:clamp(34px,4.6vw,60px);font-weight:700;line-height:1.02;
+  letter-spacing:-.01em;margin-bottom:clamp(22px,3vw,36px);
+  text-shadow:var(--name-shadow);transition:text-shadow 6s linear;
+}
+.detail__body p{
+  font-size:clamp(16px,1.35vw,20px);line-height:1.65;color:var(--muted);
+  margin-bottom:1.1em;transition:color 6s linear;
+}
+
+.detail__foot{
+  margin-top:clamp(30px,4vw,52px);padding-top:clamp(24px,3vw,36px);
+  border-top:1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+  display:grid;gap:clamp(22px,3vw,34px);
+}
+.detail__label{
+  font-family:"Space Mono", monospace;font-weight:700;font-size:11px;
+  letter-spacing:.24em;text-transform:uppercase;color:var(--eyebrow);
+  margin-bottom:14px;transition:color 6s linear;
+}
+.detail__tools,.detail__models,.detail__links{list-style:none;display:flex;flex-wrap:wrap;gap:10px}
+.detail__tools li,.detail__models li{
+  display:flex;align-items:center;gap:9px;
+  padding:8px 14px;border-radius:999px;
+  border:1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+  font-family:"Space Mono", monospace;font-size:13px;color:var(--ink);
+  transition:color 6s linear,border-color 6s linear;
+}
+.detail__models li{font-style:italic;font-family:"Playfair Display",serif;font-size:16px}
+.icon{flex:none;display:block}
+
+.detail__links{flex-direction:column;gap:0}
+.detail__links a{
+  display:flex;align-items:center;gap:10px;padding:13px 2px;
+  border-bottom:1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  font-size:clamp(15px,1.2vw,18px);color:var(--ink);text-decoration:none;
+  transition:color 6s linear,gap .2s ease;
+}
+.detail__links a:hover{gap:16px}
+.detail__links a:focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:3px}
+.detail__links a span:last-child{margin-left:auto;opacity:.55}
+.detail__none{font-size:15px;color:var(--muted);font-style:italic;transition:color 6s linear}
+
+@media (prefers-reduced-motion:reduce){
+  body,.eyebrow,.tagline,.name,.photo,.star,.tab{transition:none}
+  .star{animation:none}
+  .card,.card__img,.card__reveal,.card__scrim{transition:none}
+  .card:hover,.card:focus-visible{transform:none}
+  .card:hover .card__img{transform:none}
 }
