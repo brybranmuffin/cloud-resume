@@ -1,14 +1,18 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # dependencies
 /node_modules
-/.pnp
-.pnp.js
 
-# testing
-/coverage
+# NOTE: /build is intentionally NOT ignored.
+# The deploy workflow syncs the committed ./build directory to S3.
 
-# production
+# vite
+.vite
+dist
+*.local
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # misc
 .DS_Store
@@ -16,7 +20,3 @@
 .env.development.local
 .env.test.local
 .env.production.local
-
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
